@@ -3,14 +3,11 @@
 /** @var \yii\web\View $this */
 /** @var string $content */
 
-use common\widgets\Alert;
-use frontend\assets\AppAsset;
-use yii\bootstrap5\Breadcrumbs;
 use yii\bootstrap5\Html;
-use yii\bootstrap5\Nav;
-use yii\bootstrap5\NavBar;
+use frontend\assets\AppAsset;
 
 AppAsset::register($this);
+
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -24,59 +21,46 @@ AppAsset::register($this);
 	<?php $this->head() ?>
 </head>
 
-<body class="d-flex flex-column h-100">
+<body>
 	<?php $this->beginBody() ?>
 
-	<header>
-		<?php
-		NavBar::begin([
-			'brandLabel' => Yii::$app->name,
-			'brandUrl' => Yii::$app->homeUrl,
-			'options' => [
-				'class' => 'navbar navbar-expand-md navbar-dark bg-dark fixed-top',
-			],
-		]);
-		$menuItems = [
-			['label' => 'Home', 'url' => ['/site/index']],
-		];
-		if (Yii::$app->user->isGuest) {
-			$menuItems[] = ['label' => 'Signup', 'url' => ['/user/registration/register']];
-		}
-
-		echo Nav::widget([
-			'options' => ['class' => 'navbar-nav me-auto mb-2 mb-md-0'],
-			'items' => $menuItems,
-		]);
-		if (Yii::$app->user->isGuest) {
-			echo Html::tag('div', Html::a('Login', ['/user/security/login'], ['class' => ['btn btn-link login text-decoration-none']]), ['class' => ['d-flex']]);
-		} else {
-			echo Html::beginForm(['/user/security/logout'], 'post', ['class' => 'd-flex'])
-				. Html::submitButton(
-					'Logout (' . Yii::$app->user->identity->username . ')',
-					['class' => 'btn btn-link logout text-decoration-none']
-				)
-				. Html::endForm();
-		}
-		NavBar::end();
-		?>
-	</header>
-
-	<main role="main" class="flex-shrink-0">
-		<div class="container">
-			<?= Breadcrumbs::widget([
-				'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
-			]) ?>
-			<?= Alert::widget() ?>
-			<?= $content ?>
+	<div class="container-fluid mt-4">
+		<div class="row">
+			<div class="col-8">
+				<hr>
+				<?= $content ?>
+			</div>
+			<div class="col-4">
+				<div class="static-sidebar position-fixed">
+					<hr>
+					<div class="clearfix my-4">
+						<a href="javascript:;" class="normal-text float-start">Francisco Mendes</a>
+						<a href="javascript:;" target="_blank" class="normal-text float-end"><i class="fa-solid fa-file-pdf fa-fw"></i></a>
+					</div>
+					<div>
+						<p class="normal-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+					</div>
+					<hr>
+					<div>
+						<ul class="static-sidebar-menu">
+							<li>
+								<a href="javascript:;" target="_blank" class="normal-text"><i class="fa-solid fa-link fa-fw"></i> Home</a>
+							</li>
+							<li>
+								<a href="javascript:;" target="_blank" class="normal-text"><i class="fa-solid fa-link fa-fw"></i> Linkedin</a>
+							</li>
+							<li>
+								<a href="javascript:;" target="_blank" class="normal-text"><i class="fa-solid fa-link fa-fw"></i> Instagram</a>
+							</li>
+							<li>
+								<a href="javascript:;" target="_blank" class="normal-text"><i class="fa-solid fa-link fa-fw"></i> Behance</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
 		</div>
-	</main>
-
-	<footer class="footer mt-auto py-3 text-muted">
-		<div class="container">
-			<p class="float-start">&copy; <?= Html::encode(Yii::$app->name) ?> <?= date('Y') ?></p>
-			<p class="float-end"><?= Yii::powered() ?></p>
-		</div>
-	</footer>
+	</div>
 
 	<?php $this->endBody() ?>
 </body>
