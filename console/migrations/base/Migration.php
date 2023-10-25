@@ -35,7 +35,10 @@ class Migration extends BaseMigration
 
 	public function createTable($table, $columns, $options = null)
 	{
-		return parent::createTable($table, $columns, $options, $this->tableOptions);
+		if (empty($options)) {
+			$options = $this->tableOptions;
+		}
+		return parent::createTable($table, $columns, $options);
 	}
 
 	public function addForeignKey($name, $table, $columns, $refTable, $refColumns, $delete = 'NO ACTION', $update = 'NO ACTION')

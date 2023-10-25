@@ -3,6 +3,7 @@
 namespace backend\controllers;
 
 use common\models\LoginForm;
+use Da\User\Filter\AccessRuleFilter;
 use Yii;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
@@ -22,6 +23,9 @@ class SiteController extends Controller
 		return [
 			'access' => [
 				'class' => AccessControl::class,
+				'ruleConfig' => [
+					'class' => AccessRuleFilter::class
+				],
 				'rules' => [
 					[
 						'actions' => ['error'],
@@ -30,7 +34,7 @@ class SiteController extends Controller
 					[
 						'actions' => ['index'],
 						'allow' => true,
-						'roles' => ['@'],
+						'roles' => ['admin'],
 					],
 				],
 			]
