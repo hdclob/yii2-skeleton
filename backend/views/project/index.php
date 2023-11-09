@@ -1,5 +1,6 @@
 <?php
 
+use common\helpers\DateTimeHelper;
 use common\models\Project;
 use yii\helpers\Html;
 use yii\helpers\Url;
@@ -22,18 +23,45 @@ $this->params['breadcrumbs'][] = $this->title;
 		<?= Html::a('Create Project', ['create'], ['class' => 'btn btn-success']) ?>
 	</p>
 
-	<?php Pjax::begin(); ?>
+	<?php Pjax::begin(['id' => 'project-pjax-container']); ?>
 
 	<?= GridView::widget([
 		'dataProvider' => $dataProvider,
 		'columns' => [
-			['class' => 'yii\grid\SerialColumn'],
-
-			'project_id',
+			[
+				'attribute' => 'project_id',
+				'label' => '#'
+			],
 			'title',
 			'description:ntext',
-			'created_at',
-			'updated_at',
+			[
+				'attribute' => 'display',
+				'format' => 'raw',
+				'value' => function (Project $model) {
+					return '<div class="form-check form-switch">' .
+						Html::checkbox(
+							'',
+							$model->display,
+							[
+								'class' => 'displayCheckbox form-check-input',
+								'data-modelid' => $model->project_id
+							]
+						) .
+						'</div>';
+				},
+			],
+			[
+				'attribute' => 'created_at',
+				'value' => function (Project $model) {
+					return DateTimeHelper::getDateTime($model->created_at);
+				}
+			],
+			[
+				'attribute' => 'updated_at',
+				'value' => function (Project $model) {
+					return DateTimeHelper::getDateTime($model->updated_at);
+				}
+			],
 			[
 				'class' => ActionColumn::className(),
 				'urlCreator' => function ($action, Project $model, $key, $index, $column) {
@@ -46,3 +74,15 @@ $this->params['breadcrumbs'][] = $this->title;
 	<?php Pjax::end(); ?>
 
 </div>
+
+<script>
+	$(function() {
+		$('body').on('change', '.displayCheckbox', function(e) {
+			e.preventDefault();
+	
+			$.ajax({
+				url: '<?= Url::to(['toggle-display']) ?>?project_id=' + $(this).data('modelid')
+			})
+		})
+	})
+</script>

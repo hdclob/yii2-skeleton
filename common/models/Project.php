@@ -11,6 +11,7 @@ use yii\behaviors\TimestampBehavior;
  * @property int $project_id
  * @property string $title
  * @property string|null $description
+ * @property int $display
  * @property int $created_at
  * @property int $updated_at
  *
@@ -36,7 +37,7 @@ class Project extends \yii\db\ActiveRecord
 		return [
 			[['title'], 'required'],
 			[['description'], 'string'],
-			[['created_at', 'updated_at'], 'integer'],
+			[['display', 'created_at', 'updated_at'], 'integer'],
 			[['title'], 'string', 'max' => 255],
 			[['mediaInput'], 'validateMedia'],
 		];
@@ -51,6 +52,7 @@ class Project extends \yii\db\ActiveRecord
 			'project_id' => 'Project ID',
 			'title' => 'Title',
 			'description' => 'Description',
+			'display' => 'Display on Site',
 			'created_at' => 'Created At',
 			'updated_at' => 'Updated At',
 		];
@@ -93,5 +95,14 @@ class Project extends \yii\db\ActiveRecord
 				$this->addError($attr . '[' . $k . '-url]', 'URL cannot be blank');
 			}
 		}
+	}
+
+	public function toggleDisplay()
+	{
+		$boolDisplay = boolval($this->display);
+		$boolDisplay = !$boolDisplay;
+		$this->display = intval($boolDisplay);
+
+		return $this->save();
 	}
 }

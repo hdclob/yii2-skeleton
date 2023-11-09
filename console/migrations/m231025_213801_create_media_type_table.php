@@ -23,6 +23,10 @@ class m231025_213801_create_media_type_table extends Migration
 				'media_type_id' => 2,
 				'name' => 'Video'
 			],
+			[
+				'media_type_id' => 3,
+				'name' => 'Youtube Video'
+			],
 		]);
 	}
 

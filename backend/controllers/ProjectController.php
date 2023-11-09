@@ -92,6 +92,7 @@ class ProjectController extends Controller
 
 		if ($this->request->isPost) {
 			if ($model->load($this->request->post())) {
+				\Yii::$app->session->getAllFlashes(true);
 				$t = \Yii::$app->db->beginTransaction();
 				try {
 					if (!$model->save()) {
@@ -110,8 +111,10 @@ class ProjectController extends Controller
 
 					$t->commit();
 
+					\Yii::$app->session->setFlash('success', 'Project created successfully');
 					return $this->redirect(['view', 'project_id' => $model->project_id]);
 				} catch (\Throwable $e) {
+					\Yii::$app->session->setFlash('danger', 'Something went wrong creating project');
 					$t->rollBack();
 				}
 			}
@@ -142,6 +145,7 @@ class ProjectController extends Controller
 		}
 
 		if ($this->request->isPost && $model->load($this->request->post())) {
+			\Yii::$app->session->getAllFlashes(true);
 			$t = \Yii::$app->db->beginTransaction();
 			try {
 				if (!$model->save()) {
@@ -162,8 +166,10 @@ class ProjectController extends Controller
 
 				$t->commit();
 
+				\Yii::$app->session->setFlash('success', 'Project updated successfully');
 				return $this->redirect(['view', 'project_id' => $model->project_id]);
 			} catch (\Throwable $e) {
+				\Yii::$app->session->setFlash('danger', 'Something went wrong updating project');
 				$t->rollBack();
 			}
 		}
@@ -171,6 +177,25 @@ class ProjectController extends Controller
 		return $this->render('update', [
 			'model' => $model,
 		]);
+	}
+
+	/**
+	 * Toggles the "display" attribute of an existing Project model.
+	 * @param int $project_id Project ID
+	 * @return \yii\web\Response
+	 * @throws NotFoundHttpException if the model cannot be found
+	 */
+	public function actionToggleDisplay($project_id)
+	{
+		if (!$this->request->isAjax) {
+			throw new NotFoundHttpException('The requested page does not exist.');
+		}
+
+		$this->response->format = Response::FORMAT_JSON;
+		if ($this->findModel($project_id)->toggleDisplay()) {
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -182,7 +207,12 @@ class ProjectController extends Controller
 	 */
 	public function actionDelete($project_id)
 	{
-		$this->findModel($project_id)->delete();
+		\Yii::$app->session->getAllFlashes(true);
+		if ($this->findModel($project_id)->delete()) {
+			\Yii::$app->session->setFlash('success', 'Project deleted successfully');
+		} else {
+			\Yii::$app->session->setFlash('danger', 'Something went wrong deleting project');
+		}
 
 		return $this->redirect(['index']);
 	}

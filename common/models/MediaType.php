@@ -14,6 +14,10 @@ use Yii;
  */
 class MediaType extends \yii\db\ActiveRecord
 {
+	const MEDIA_TYPE_IMAGE = 1;
+	const MEDIA_TYPE_VIDEO = 2;
+	const MEDIA_TYPE_YOUTUBE_VIDEO = 2;
+
 	/**
 	 * {@inheritdoc}
 	 */
